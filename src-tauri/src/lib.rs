@@ -66,7 +66,7 @@ async fn ask_ai(prompt: String) -> Result<String, String> {
         let file_result = OpenOptions::new()
             .create(true)
             .append(true)
-            .open("dataset.jsonl");
+            .open("../dataset.jsonl");
 
         if let Ok(mut file) = file_result {
             // Write the JSON line and a newline character
