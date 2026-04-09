@@ -1,4 +1,6 @@
 use serde::{Deserialize, Serialize};
+use std::fs::OpenOptions;
+use std::io::Write;
 
 // Input data structure (What we send to Ollama)
 #[derive(Serialize)]
@@ -14,6 +16,13 @@ struct OllamaResponse {
     response: String,
 }
 
+// Structure for our training dataset log
+#[derive(Serialize)]
+struct LogEntry {
+    prompt: String,
+    completion: String,
+}
+
 // The command called by the React frontend
 #[tauri::command]
 async fn ask_ai(prompt: String) -> Result<String, String> {
@@ -22,7 +31,7 @@ async fn ask_ai(prompt: String) -> Result<String, String> {
     // Prepare the request for the Qwen model
     let request_body = OllamaRequest {
         model: "qwen2.5:1.5b".to_string(), 
-        prompt,
+        prompt: prompt.clone(), // Clone prompt to use it later for logging
         stream: false, 
     };
 
@@ -40,7 +49,36 @@ async fn ask_ai(prompt: String) -> Result<String, String> {
         .await
         .map_err(|e| format!("JSON parsing error: {}", e))?;
 
-    Ok(parsed.response)
+    let ai_response = parsed.response;
+
+    // Data collection for fine-tuning
+    
+    // Create the structured log entry
+    let log_entry = LogEntry {
+        prompt,
+        completion: ai_response.clone(),
+    };
+
+    // Convert the entry to a single-line JSON string
+    if let Ok(json_line) = serde_json::to_string(&log_entry) {
+        // Open or create dataset.jsonl in append mode
+        // This file will be created in the root folder of the Tauri backend
+        let file_result = OpenOptions::new()
+            .create(true)
+            .append(true)
+            .open("dataset.jsonl");
+
+        if let Ok(mut file) = file_result {
+            // Write the JSON line and a newline character
+            if let Err(e) = writeln!(file, "{}", json_line) {
+                eprintln!("Failed to write to dataset: {}", e);
+            }
+        } else {
+            eprintln!("Failed to open dataset file.");
+        }
+    }
+
+    Ok(ai_response)
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]

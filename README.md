@@ -29,6 +29,7 @@ This is not just an AI chat wrapper. The ultimate goal of this project is to col
    ```
 
 3. **Start the local AI model:**
+
    Open a separate terminal and run:
    ```bash
    ollama run qwen2.5:1.5b
