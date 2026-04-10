@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Training pipeline
+training-pipeline/venv/
+training-pipeline/outputs/
+training-pipeline/lora_adapter/
+training-pipeline/unsloth_compiled_cache/
+*.safetensors
+__pycache__/
