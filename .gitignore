@@ -34,3 +34,6 @@ __pycache__/
 # Exported Custom Models
 training-pipeline/ai-terminal-custom/
 training-pipeline/ai-terminal-custom_gguf/
+
+# Data Collection
+dataset.jsonl

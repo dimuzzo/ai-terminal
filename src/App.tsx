@@ -14,13 +14,32 @@ function App() {
 
     // 1. Initialize the terminal with more scrollback memory
     const term = new Terminal({
+      fontFamily: '"Fira Code", monospace',
+      fontSize: 15,
       cursorBlink: true,
+      cursorStyle: 'block',
       theme: {
-        background: "#1e1e1e",
-        foreground: "#cccccc",
-      },
-      fontFamily: 'Consolas, "Courier New", monospace',
-      scrollback: 5000, 
+        background: '#1a1b26',
+        foreground: '#a9b1d6',
+        cursor: '#f7768e',     
+        selectionBackground: '#364A82',
+        black: '#32344a',
+        red: '#f7768e',
+        green: '#9ece6a',
+        yellow: '#e0af68',
+        blue: '#7aa2f7',
+        magenta: '#ad8ee6',
+        cyan: '#449dab',
+        white: '#787c99',
+        brightBlack: '#444b6a',
+        brightRed: '#ff7a93',
+        brightGreen: '#b9f27c',
+        brightYellow: '#ff9e64',
+        brightBlue: '#7da6ff',
+        brightMagenta: '#bb9af7',
+        brightCyan: '#0db9d7',
+        brightWhite: '#acb0d0'
+      }
     });
 
     const fitAddon = new FitAddon();
@@ -30,10 +49,10 @@ function App() {
 
     // 2. Setup initial UI and prompt string
     term.writeln("Welcome to AI-Terminal (Powered by Qwen)");
-    term.writeln("Type normal OS commands (dir, echo), or prefix with '?' to ask AI.");
+    term.writeln("Type normal OS commands (dir, echo, ...), or prefix with '?' to ask AI.");
     
-    const promptPrefix = "\x1b[32muser@ai-terminal\x1b[0m:\x1b[34m~\x1b[0m$ ";
-    term.write("\r\n" + promptPrefix);
+    const promptText = '\r\n\x1b[1;32m⚡ user\x1b[0m@\x1b[1;34mai-terminal\x1b[0m:~$ ';
+    term.write("\r\n" + promptText);
 
     // 3. State variables for input and history
     let currentInput = "";
@@ -47,7 +66,7 @@ function App() {
       // Command: clear screen (Ctrl+L)
       if (ev.ctrlKey && ev.key === "l") {
         term.clear();
-        term.write("\r\n" + promptPrefix + currentInput);
+        term.write("\r\n" + promptText + currentInput);
         return;
       }
 
@@ -75,7 +94,7 @@ function App() {
         }
 
         currentInput = "";
-        term.write("\r\n" + promptPrefix);
+        term.write("\r\n" + promptText);
       } 
       
       // Command: Backspace
@@ -92,7 +111,7 @@ function App() {
           historyIndex++;
           currentInput = commandHistory[historyIndex];
           // \x1b[2K clears the entire line, \r moves cursor to start
-          term.write("\x1b[2K\r" + promptPrefix + currentInput);
+          term.write("\x1b[2K\r" + promptText + currentInput);
         }
       } 
       
@@ -101,11 +120,11 @@ function App() {
         if (historyIndex > 0) {
           historyIndex--;
           currentInput = commandHistory[historyIndex];
-          term.write("\x1b[2K\r" + promptPrefix + currentInput);
+          term.write("\x1b[2K\r" + promptText + currentInput);
         } else if (historyIndex === 0) {
           historyIndex = -1;
           currentInput = "";
-          term.write("\x1b[2K\r" + promptPrefix);
+          term.write("\x1b[2K\r" + promptText);
         }
       } 
       
