@@ -30,7 +30,7 @@ function App() {
 
     // 2. Setup initial UI and prompt string
     term.writeln("Welcome to AI-Terminal (Powered by Qwen)");
-    term.writeln("Features: [Up/Down] History | [Ctrl+L] Clear Screen | [Ctrl+Shift+V] Paste");
+    term.writeln("Type normal OS commands (dir, echo), or prefix with '?' to ask AI.");
     
     const promptPrefix = "\x1b[32muser@ai-terminal\x1b[0m:\x1b[34m~\x1b[0m$ ";
     term.write("\r\n" + promptPrefix);
@@ -63,8 +63,9 @@ function App() {
           term.writeln("\x1b[33mThinking...\x1b[0m");
 
           try {
-            const response = await invoke<string>("ask_ai", {
-              prompt: currentInput,
+            // Route the input to our new Rust handler
+            const response = await invoke<string>("process_input", {
+              input: currentInput,
             });
             const formattedResponse = response.replace(/\n/g, "\r\n");
             term.writeln(formattedResponse);
