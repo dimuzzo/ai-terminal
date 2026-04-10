@@ -61,6 +61,19 @@ To train the model on your collected data (`dataset.jsonl`), we use Unsloth for 
    pip install "unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git"
    pip install trl peft accelerate bitsandbytes
    ```
+4. Run the training script:
+   ```bash
+   python train.py
+   ```
+5. Export the trained adapter to GGUF format:
+   ```bash
+   python export.py
+   ```
+6. Load your new custom brain into Ollama:
+   ```bash
+   cd ai-terminal-custom_gguf
+   ollama create ai-terminal-custom -f Modelfile
+   ```
 
 ## Stack
 - **Frontend**: React, TypeScript, xterm.js

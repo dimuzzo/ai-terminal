@@ -30,3 +30,7 @@ training-pipeline/lora_adapter/
 training-pipeline/unsloth_compiled_cache/
 *.safetensors
 __pycache__/
+
+# Exported Custom Models
+training-pipeline/ai-terminal-custom/
+training-pipeline/ai-terminal-custom_gguf/
